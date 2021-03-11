@@ -2,7 +2,6 @@ import streamlit as st
 from  datetime import datetime
 import pandas as pd
 import requests
-import imageio
 from PIL import Image
 
 '''
