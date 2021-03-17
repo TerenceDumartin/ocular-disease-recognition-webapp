@@ -6,6 +6,7 @@ import requests
 from PIL import Image
 import os
 import time
+import numpy as np
 
 # SETTING PAGE CONFIG TO WIDE MODE
 st.set_page_config(
@@ -43,7 +44,7 @@ footer {
 }
 
 .stProgress .st-bo {
-    background-color: black;
+    background-color: white;
 }
 
 .css-2trqyj {
@@ -98,7 +99,7 @@ iframe {
 }
 
 .css-1o4i7as {
-    height: 165px;
+    height: 170px;
 }
 
 .css-9eqr5v {
@@ -108,6 +109,17 @@ iframe {
 .css-tsy3mu:nth-last-child {
     margin-left: 3rem;
     margin-top: 1rem;
+}
+
+.stProgress {
+    padding-left: 15px;
+    padding-right: 35%;
+}
+
+.css-a0ecc6 > div > .element-container:nth-child(5) > .css-tsy3mu {
+    margin-top: -4.9em;
+    width: 100px !important;
+    pointer-events:none;
 }
 
 """
@@ -130,29 +142,33 @@ response = None
 
 with row1_1:
 
-    st.image('i-eye-logo.png', width=120)
+    st.image('logo-test.png', width=200)
+    st.markdown("""
+        ##
+        """)
     st.markdown("""
         ####
 
         Upload an eye fundus !
 
-        Our **Artificial Intelligence** trained with more than **100 000 000** parameters
+        Our **Artificial Intelligence** trained with more than **100 000 000** parameters<br>
         gonna analyse your eye.
-        #####
-        """)
+        ###
+        """, unsafe_allow_html=True)
 
     uploaded_file = st.file_uploader("Upload an eye", type=["jpg", "jpeg", "png"])
 
     if uploaded_file is not None:
         img_file = uploaded_file
         img = Image.open(img_file)
-        #st.image(uploaded_file, width=50)
+        st.image(uploaded_file, width=50)
 
     #st.set_option('deprecation.showfileUploaderEncoding', False)
 
 
     if st.button('🩺 Analyse it'):
-        url = 'https://odrdockerimagelight0-4rkl6m35oq-ew.a.run.app/predict'
+        #url = 'https://odrdockerimagelight0-4rkl6m35oq-ew.a.run.app/predict'
+        url = 'https://odrfinal-4rkl6m35oq-ew.a.run.app/predict'
         temp_image = str(int(time.time())) + "_" + 'img.jpg'
         img.save(temp_image)
 
@@ -167,12 +183,25 @@ with row1_1:
 
 
 with row1_2:
-    if response == None:
+    if uploaded_file is None:
+        st.markdown('''
+            #
+            #####
+            ''')
+        st.image('gif-to-jpeg.jpg')
+    # else:
+    #     st.markdown('''
+    #         #
+    #         #####
+    #         ''')
+    #     st.image('bg-img-not-gif.png')
+    if uploaded_file is not None and response == None:
         st.markdown('''
             #
             #####
             ''')
         st.image('bg-img.gif')
+        #st.write('Waiting for your upload')
     if response:
         st.markdown('''
             ### Analysing...
@@ -191,16 +220,87 @@ with row1_2:
             st.text( i + '  ✓')
             #bar.progress(i + 1)
             time.sleep(0.5)
-
-    if prediction:
-        if prediction == 1:
-            st.markdown("""
-                ### Our Result
+        st.markdown("""
                 #####
                 """)
-            st.text('''
-                BLABLABLA YOUR ARE BLIND
+
+    if prediction:
+        if prediction == 'Not an eye, upload again !':
+            st.markdown("""
+                ### Result:
+                #####
+                """)
+            st.image('failure.png', width=50)
+            st.write('**Oopsi**...')
+            #st.image(uploaded_file, width=50)
+            st.write('''
+                We detect that, the image you just upload is **not an eye fundus** !<br>
+                <span style='text-align: center;'>Upload another image.</span>
+                ''', unsafe_allow_html=True)
+        if prediction == 'Normal':
+            st.markdown("""
+                ### Result:
+                #####
+                """)
+            #st.image(uploaded_file, width=50)
+            st.write(f'''
+                Disease: **Normal**
                 ''')
+            st.write('''
+                We detect nothing about your eye ! <br>
+                It look like **normal** ! 👌🏿
+                ''', unsafe_allow_html=True)
+            st.markdown('''
+                ##
+                #####
+                ''')
+            st.text('''
+                👈🏿 Don't hesitate to upload another one !
+                ''')
+        if "prediction" in prediction:
+            st.markdown("""
+                ### Result:
+                #####
+                """)
+
+            df = pd.DataFrame(prediction['prediction'], index=['G', 'C', 'A', 'H', 'M', 'O' ]).T
+
+            names = df.columns
+            dico_names = {
+                'G' : 'Glaucoma',
+                'C' : 'Cataract',
+                'H' : 'Hypertension',
+                'A' : 'Age related Macular Degeneration (A)',
+                'M' : 'Pathological Myopia',
+                'O' : 'Other diseases/abnormalities ',
+                }
+
+            def argm(ser):
+                return dico_names[names[np.argmax(ser)]], ser[np.argmax(ser)]
+            res = df.apply(argm, axis = 1).item()
+
+            st.write(f'''
+                Disease: **{res[0]}** – Certainty: **{round(res[1]*100,2)}%**
+                ''')
+            #st.write(f' %**')
+
+            #############
+
+            #############
+
+            df_ = pd.DataFrame(df).T.sort_values(by = 0, ascending = False).head(3)
+            st.markdown("""
+                <style>
+                    .stProgress > div > div > div > div {
+                        background-color: black;
+                    }
+                </style>""",unsafe_allow_html=True)
+
+            for i, item in df_.iterrows():
+                st.progress(item[0])
+                st.text(f'{dico_names[i]}: {round(item[0]*100,2)}%')
+
+
 
 components.html(
     """
