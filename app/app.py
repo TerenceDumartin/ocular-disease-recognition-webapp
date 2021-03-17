@@ -11,7 +11,7 @@ import numpy as np
 # SETTING PAGE CONFIG TO WIDE MODE
 st.set_page_config(
     layout="wide",
-    page_title="I-EYE - Detect ocular disease",
+    page_title="A-EYE - Detect ocular disease",
     page_icon="👁",
     )
 
@@ -44,7 +44,11 @@ footer {
 }
 
 .stProgress .st-bo {
-    background-color: white;
+    background-color: #ffffff !important;
+}
+
+.st-bq {
+    background-color: #000000 !important;
 }
 
 .css-2trqyj {
@@ -248,7 +252,7 @@ with row1_2:
                 ''')
             st.write('''
                 We detect nothing about your eye ! <br>
-                It look like **normal** ! 👌🏿
+                It looks like **normal** ! 👌🏿
                 ''', unsafe_allow_html=True)
             st.markdown('''
                 ##
