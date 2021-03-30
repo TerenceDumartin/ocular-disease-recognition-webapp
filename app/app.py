@@ -146,7 +146,7 @@ response = None
 
 with row1_1:
 
-    st.image('logo-test.png', width=200)
+    st.image('img/logo-test.png', width=200)
     st.markdown("""
         ##
         """)
@@ -192,7 +192,7 @@ with row1_2:
             #
             #####
             ''')
-        st.image('gif-to-jpeg.jpg')
+        st.image('img/gif-to-jpeg.jpg')
     # else:
     #     st.markdown('''
     #         #
@@ -204,7 +204,7 @@ with row1_2:
             #
             #####
             ''')
-        st.image('bg-img.gif')
+        st.image('img/bg-img.gif')
         #st.write('Waiting for your upload')
     if response:
         st.markdown('''
@@ -234,7 +234,7 @@ with row1_2:
                 ### Result:
                 #####
                 """)
-            st.image('failure.png', width=50)
+            st.image('img/failure.png', width=50)
             st.write('**Oopsi**...')
             #st.image(uploaded_file, width=50)
             st.write('''
