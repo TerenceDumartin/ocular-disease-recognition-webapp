@@ -7,7 +7,7 @@ To carry out this project, we used a **dataset of 6,000 patients comprising 12,0
 <br>
 
 ⚠️  To learn more about the **models** we used, check this [repository](https://github.com/TerenceDumartin/ocular-disease-recognition) <br>
-⚠️  To learn more about the **API**, check this [repository](https://github.com/TerenceDumartin/ocular-disease-recognition)
+⚠️  To learn more about the **API**, check this [repository](https://github.com/TerenceDumartin/ocular-disease-recognition-api)
 
 ### Summary
 To develop that interface with use the python library **streamlit**, deploy on [heroku](https://od-recognition.herokuapp.com/) <br>
